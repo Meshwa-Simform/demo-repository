@@ -11,6 +11,16 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
+      - name: Create gh-pages branch if not exists
+        run: |
+          if ! git rev-parse --verify gh-pages; then
+            git checkout --orphan gh-pages
+            git rm -rf .
+            git commit --allow-empty -m "Initial gh-pages commit"
+            git push origin gh-pages
+          else
+            git checkout gh-pages
+          fi
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: github.ref == 'refs/heads/main'
